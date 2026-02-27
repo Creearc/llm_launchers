@@ -55,8 +55,8 @@ echo -e '#include <stdio.h>\n#include <cuda_runtime.h>\nint main() { int dev; cu
 
 # Build template
 ```bash
-cmake -B build -DCMAKE_CXX_STANDARD=17 -DCMAKE_CUDA_STANDARD=17 -DLLAMA_CURL=OFF -DLLAMA_BUILD_TESTS=OFF -DCMAKE_CUDA_ARCHITECTURES={YOUR_VALUE_HERE} -DGGML_CUDA=ON -DCMAKE_CUDA_HOST_COMPILER=/usr/bin/gcc-10
-cmake --build build --config Release
+cmake -B build -DCMAKE_CXX_STANDARD=17 -DCMAKE_CUDA_STANDARD=17 -DLLAMA_CURL=OFF -DLLAMA_BUILD_TESTS=OFF -DCMAKE_CUDA_ARCHITECTURES={YOUR_VALUE_HERE} -DGGML_CUDA=ON -DCMAKE_CUDA_HOST_COMPILER=/usr/bin/gcc-10  -DGGML_RPC=ON
+cmake --build build --config Release -j 4
 ```
 
 # NVIDIA GeForce GTX 2060 6GB example
@@ -75,4 +75,15 @@ wget -O models/qwen2.5-coder-0.5b-instruct-q8_0.gguf https://huggingface.co/Qwen
 cd build/bin
 
 ./llama-server -m "../../models/qwen2.5-coder-0.5b-instruct-q8_0.gguf" --n-gpu-layers 8 --jinja --host 0.0.0.0 --host 0.0.0.0 --port 8080 -b 512 -ub 256 --ctx-size 32768 -t 6 --cache-ram 0 --top-k 1 --top-p 0.9 --min-p 0.05 --temp 0.01 --reasoning-budget 0 --repeat-penalty 0.9 --api-key "test-key"
+```
+
+# RPC
+## Host
+```bash
+./llama-server -m "../../models/Qwen3.5-27B-Q4_K_M.gguf" --host 0.0.0.0 --port 8080 --jinja -b 512 -ub 256 --ctx-size 32768 -t 6 --temp 0.01 --top-k 1 --top-p 0.9 --min-p 0.05 --reasoning-budget 0 --repeat-penalty 0.9 --api-key "test-key" --rpc 192.168.0.245:50052,192.168.0.116:50052 -ngl 99 
+```
+
+## Client
+```bash
+CUDA_VISIBLE_DEVICES=0 ./rpc-server --host 0.0.0.0 --port 50052 -c
 ```
