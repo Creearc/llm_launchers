@@ -79,8 +79,14 @@ cd build/bin
 
 # RPC
 ## Host
+### Soft
 ```bash
-./llama-server -m "../../models/Qwen3.5-27B-Q4_K_M.gguf" --host 0.0.0.0 --port 8080 --jinja -b 512 -ub 256 --ctx-size 32768 -t 6 --temp 0.01 --top-k 1 --top-p 0.9 --min-p 0.05 --reasoning-budget 0 --repeat-penalty 0.9 --api-key "test-key" --rpc 192.168.0.245:50052,192.168.0.116:50052 -ngl 99 
+./llama-server -m "../../models/Qwen3.5-27B-Q4_K_M.gguf" --jinja --host 0.0.0.0 --port 8080 -b 512 -ub 256 --ctx-size 32768 -t 4 --top-k 1 --top-p 0.9 --min-p 0.05 --temp 0.01 --reasoning-budget 0 --repeat-penalty 0.9 --api-key "test-key" --rpc 192.168.0.245:50052,192.168.0.116:50052 --n-gpu-layers 30 --n-gpu-layers-draft 30 --no-kv-offload --flash-attn 1
+```
+
+### Max
+```bash
+./llama-server -m "../../models/Qwen3.5-27B-Q4_K_M.gguf" --jinja --host 0.0.0.0 --port 8080 -b 512 -ub 256 --ctx-size 24576 -t 2 --top-k 1 --top-p 0.9 --min-p 0.05 --temp 0.01 --reasoning-budget 0 --repeat-penalty 0.9 --api-key "test-key" --rpc 192.168.0.245:50052,192.168.0.116:50052 --n-gpu-layers 41 --n-gpu-layers-draft 41 --no-kv-offload --flash-attn 1 --split-mode row
 ```
 
 ## Client
